@@ -59,7 +59,7 @@ body {
     text-align: center;
     background: rgba(255,255,255,0.94);
     border-radius: 30px;
-    box-shadow: 0 20px 60px rgba(75, 45, 20, 0.2);
+    box-shadow: 0 20px 60px rgba(75,45,20,0.2);
     animation: appear 0.8s ease;
 }
 
@@ -125,7 +125,7 @@ button {
 #yes-button {
     background: linear-gradient(135deg, #8b5e3c, #b17a50);
     color: white;
-    box-shadow: 0 5px 15px rgba(120, 75, 40, 0.25);
+    box-shadow: 0 5px 15px rgba(120,75,40,0.25);
 }
 
 #yes-button:hover {
@@ -145,6 +145,7 @@ button {
     color: #b39a83;
 }
 
+/* Ekran po kliknięciu TAK */
 .success {
     animation: appear 0.8s ease;
 }
@@ -158,9 +159,43 @@ button {
 }
 
 .success .coffee {
-    font-size: 85px;
-    margin: 20px 0;
+    font-size: 75px;
+    margin: 5px 0;
     animation: coffeePulse 2s infinite;
+}
+
+/* Jamnik */
+.dog-container {
+    width: 100%;
+    max-width: 270px;
+    margin: 5px auto 15px;
+    animation: dogAppear 1s ease;
+}
+
+@keyframes dogAppear {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.7);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.dog {
+    width: 100%;
+    overflow: visible;
+    animation: dogBounce 2s ease-in-out infinite;
+}
+
+@keyframes dogBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
 }
 
 @media (max-width: 380px) {
@@ -171,6 +206,10 @@ button {
     button {
         padding: 13px 20px;
         font-size: 16px;
+    }
+
+    .dog-container {
+        max-width: 235px;
     }
 }
 </style>
@@ -208,7 +247,9 @@ const card = document.getElementById("card");
 
 let activated = false;
 
+/* Uciekający przycisk NIE */
 function moveNoButton() {
+
     if (!activated) {
         const rect = noButton.getBoundingClientRect();
 
@@ -222,8 +263,15 @@ function moveNoButton() {
 
     const margin = 15;
 
-    const maxX = window.innerWidth - noButton.offsetWidth - margin;
-    const maxY = window.innerHeight - noButton.offsetHeight - margin;
+    const maxX = Math.max(
+        margin,
+        window.innerWidth - noButton.offsetWidth - margin
+    );
+
+    const maxY = Math.max(
+        margin,
+        window.innerHeight - noButton.offsetHeight - margin
+    );
 
     const x = margin + Math.random() * Math.max(0, maxX - margin);
     const y = margin + Math.random() * Math.max(0, maxY - margin);
@@ -232,16 +280,25 @@ function moveNoButton() {
     noButton.style.top = y + "px";
 }
 
-noButton.addEventListener("pointerenter", moveNoButton);
+/* Komputer */
+noButton.addEventListener("pointerenter", (e) => {
+    if (e.pointerType === "mouse") {
+        moveNoButton();
+    }
+});
 
+/* Telefon */
 noButton.addEventListener("touchstart", (e) => {
     e.preventDefault();
     moveNoButton();
 }, { passive: false });
 
+
+/* Kliknięcie TAK */
 yesButton.addEventListener("click", () => {
 
     card.innerHTML = `
+
         <div class="success">
 
             <div class="icon">🥰</div>
@@ -250,14 +307,102 @@ yesButton.addEventListener("click", () => {
 
             <div class="coffee">☕</div>
 
-            <p>
-                To teraz pozostaje nam tylko
-                wybrać miejsce i termin!
-            </p>
+            <div class="dog-container">
+
+                <svg class="dog"
+                     viewBox="0 0 300 180"
+                     xmlns="http://www.w3.org/2000/svg">
+
+                    <!-- Ogon -->
+                    <path d="M55 91 Q25 65 32 43"
+                          stroke="#70452f"
+                          stroke-width="9"
+                          fill="none"
+                          stroke-linecap="round"/>
+
+                    <!-- Tułów -->
+                    <ellipse cx="145" cy="102"
+                             rx="100" ry="38"
+                             fill="#a96335"/>
+
+                    <!-- Brzuszek -->
+                    <ellipse cx="145" cy="119"
+                             rx="75" ry="15"
+                             fill="#d99a64"/>
+
+                    <!-- Głowa -->
+                    <ellipse cx="242" cy="76"
+                             rx="37" ry="35"
+                             fill="#a96335"/>
+
+                    <!-- Lewe ucho -->
+                    <ellipse cx="218" cy="88"
+                             rx="17" ry="35"
+                             transform="rotate(20 218 88)"
+                             fill="#70452f"/>
+
+                    <!-- Prawe ucho -->
+                    <ellipse cx="267" cy="88"
+                             rx="16" ry="34"
+                             transform="rotate(-15 267 88)"
+                             fill="#70452f"/>
+
+                    <!-- Pyszczek -->
+                    <ellipse cx="264" cy="91"
+                             rx="22" ry="17"
+                             fill="#d99a64"/>
+
+                    <!-- Nosek -->
+                    <circle cx="283" cy="86" r="5"
+                            fill="#35251e"/>
+
+                    <!-- Oczka -->
+                    <circle cx="250" cy="67" r="4"
+                            fill="#29201c"/>
+
+                    <!-- Łapki -->
+                    <path d="M72 122 L68 151 Q68 158 81 158 L91 158 L92 125"
+                          fill="#70452f"/>
+
+                    <path d="M118 128 L115 153 Q115 160 128 160 L138 160 L139 128"
+                          fill="#70452f"/>
+
+                    <path d="M192 127 L190 151 Q190 158 203 158 L213 158 L214 122"
+                          fill="#70452f"/>
+
+                    <!-- Uśmiech -->
+                    <path d="M258 103 Q267 110 276 101"
+                          stroke="#70452f"
+                          stroke-width="2"
+                          fill="none"
+                          stroke-linecap="round"/>
+
+                    <!-- Obroża -->
+                    <path d="M224 101 Q240 111 255 103"
+                          stroke="#e9c16c"
+                          stroke-width="6"
+                          fill="none"/>
+
+                    <!-- Zawieszka -->
+                    <circle cx="241" cy="110" r="5"
+                            fill="#e9c16c"/>
+
+                    <!-- Małe dekoracje -->
+                    <text x="25" y="35" font-size="22">♡</text>
+                    <text x="255" y="25" font-size="22">♡</text>
+
+                </svg>
+
+            </div>
 
             <h2 style="color:#8b5e3c;">
                 Nie mogę się doczekać! 🤎
             </h2>
+
+            <p>
+                Kawa, dobre towarzystwo
+                i może mały spacer z jamnikiem? 🐾
+            </p>
 
         </div>
     `;
@@ -266,27 +411,39 @@ yesButton.addEventListener("click", () => {
     for (let i = 0; i < 30; i++) {
         setTimeout(createCoffee, i * 100);
     }
+
 });
 
-/* Animowane filiżanki i ziarenka */
+
+/* Animowane filiżanki i ziarenka kawy */
 function createCoffee() {
 
     const coffee = document.createElement("div");
 
     coffee.className = "coffee-float";
 
-    coffee.textContent = ["☕", "🤎", "🫘", "♨️"][
-        Math.floor(Math.random() * 4)
-    ];
+    coffee.textContent = [
+        "☕",
+        "🤎",
+        "🫘",
+        "♨️"
+    ][Math.floor(Math.random() * 4)];
 
     coffee.style.left = Math.random() * 100 + "vw";
-    coffee.style.fontSize = (Math.random() * 18 + 17) + "px";
-    coffee.style.animationDuration = (Math.random() * 3 + 5) + "s";
+
+    coffee.style.fontSize =
+        (Math.random() * 18 + 17) + "px";
+
+    coffee.style.animationDuration =
+        (Math.random() * 3 + 5) + "s";
 
     document.body.appendChild(coffee);
 
-    setTimeout(() => coffee.remove(), 8500);
+    setTimeout(() => {
+        coffee.remove();
+    }, 8500);
 }
+
 
 setInterval(createCoffee, 650);
 
